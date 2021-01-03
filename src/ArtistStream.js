@@ -4,32 +4,34 @@ import Plyr from "plyr";
 import "./Plyr.css";
 
 const url = "https://ice.raptor.pizza/hls/meiosis.m3u8";
-
-export default function ArtistStream({ createScreen }) {
-  const [loading, setLoading] = useState(true);
+const MAX_RETRIES = 15;
+export default function ArtistStream({ createScreen, test = false }) {
+  const [loading, setLoading] = useState(!test);
   const [retryCounter, setRetryCounter] = useState(0);
   const videoRef = useRef(undefined);
 
-  const initStream = useCallback(() => {
+  const initStream = useCallback(async () => {
     const video = videoRef.current;
-    fetch(url)
-      .then((r) => r)
-      .then((d) => {
-        if (d.status === 404) {
-          return false;
-        }
-        setLoading(false);
-        const source = url;
-        new Plyr(video);
-        if (Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(source);
-          hls.attachMedia(video);
-        } else {
-          video.src = source;
-        }
-        createScreen(video);
-      });
+    if (!test) {
+      await fetch(url)
+        .then((r) => r)
+        .then((d) => {
+          if (d.status === 404) {
+            return false;
+          }
+          setLoading(false);
+          const source = url;
+          new Plyr(video);
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(source);
+            hls.attachMedia(video);
+          } else {
+            video.src = source;
+          }
+        });
+    }
+    createScreen(video);
   }, [createScreen]);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function ArtistStream({ createScreen }) {
   );
   useEffect(() => {
     if (!loading) return;
-    if (retryCounter > 15) {
+    if (retryCounter > MAX_RETRIES) {
       setRetryCounter(0);
       return initStream();
     }
@@ -52,13 +54,16 @@ export default function ArtistStream({ createScreen }) {
   return (
     <div>
       <button onClick={initStream}>Stream</button>
+      <button onClick={() => videoRef.current.play()}>Play video</button>
       {loading && <div>loading... {retryCounter}</div>}
       <video
         id="artist-stream"
         crossOrigin="true"
         ref={videoRef}
         playsInline
-        style={{ display: loading ? "none" : "block" }}
+        autoPlay
+        loop
+        src={test ? require("./test_static/video.mp4").default : ""}
       />
     </div>
   );

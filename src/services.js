@@ -1,3 +1,5 @@
+//** TESTING SERVICES */
+
 var location = window.location;
 var OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 var OPENVIDU_SERVER_SECRET = "MY_SECRET";
