@@ -5,7 +5,6 @@ var OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 var OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export function getToken(mySessionId) {
-  console.log(mySessionId);
   return createSession(mySessionId).then((sessionId) => createToken(sessionId));
 }
 

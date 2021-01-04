@@ -1,14 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Hls from "hls.js";
-import Plyr from "plyr";
-import "./Plyr.css";
-
+import videojs from "video.js";
 const url = "https://ice.raptor.pizza/hls/meiosis.m3u8";
 const MAX_RETRIES = 15;
-export default function ArtistStream({ createScreen, test = false }) {
+export default function ArtistStream({ createScreen, videoRef, test = false }) {
   const [loading, setLoading] = useState(!test);
   const [retryCounter, setRetryCounter] = useState(0);
-  const videoRef = useRef(undefined);
 
   const initStream = useCallback(async () => {
     const video = videoRef.current;
@@ -21,7 +18,7 @@ export default function ArtistStream({ createScreen, test = false }) {
           }
           setLoading(false);
           const source = url;
-          new Plyr(video);
+          videojs(video, { width: 500 });
           if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(source);
@@ -32,7 +29,7 @@ export default function ArtistStream({ createScreen, test = false }) {
         });
     }
     createScreen(video);
-  }, [createScreen]);
+  }, [createScreen, videoRef, test]);
 
   useEffect(() => {
     initStream();
@@ -53,16 +50,19 @@ export default function ArtistStream({ createScreen, test = false }) {
 
   return (
     <div>
-      <button onClick={initStream}>Stream</button>
+      {/* <button onClick={initStream}>Stream</button>
       <button onClick={() => videoRef.current.play()}>Play video</button>
-      {loading && <div>loading... {retryCounter}</div>}
+      {loading && <div>loading... {retryCounter}</div>} */}
       <video
         id="artist-stream"
+        className="video-js"
         crossOrigin="true"
         ref={videoRef}
         playsInline
         autoPlay
         loop
+        width="500"
+        controls
         src={test ? require("./test_static/video.mp4").default : ""}
       />
     </div>

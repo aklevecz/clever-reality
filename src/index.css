@@ -1,6 +1,7 @@
 body {
   margin: 0;
 }
-video {
+video,
+#artist-stream {
   display: none;
 }
