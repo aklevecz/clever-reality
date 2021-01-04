@@ -1,12 +1,13 @@
 import { OpenVidu } from "openvidu-browser";
 import { getToken } from "./services";
 import { useEffect, useState } from "react";
+import { createOrb, removeOrb } from "./ThreeFuncs";
 
 var mySessionId = "TEST_SESSION";
 var myUserName = "cutie" + Math.floor(Math.random() * 100);
 const VIDEO_CONTAINER = "video-container";
 
-function VidjuRoom({ createOrb, removeOrb }) {
+function VidjuRoom() {
   const [session, setSession] = useState(undefined);
 
   const init = () => {

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import ArtistStream from "./ArtistStream";
-import VidjuRoom from "./VidjuRoom";
 import {
   CAMERA_START,
   createFloor,
@@ -18,17 +17,14 @@ import {
 } from "./ThreeFuncs";
 
 const test = false;
-// const randomF = (max) => Math.random() * max;
 
 export default function ThreeWorld() {
   const [phase, setPhase] = useState(0);
-  const [vidjuRoomOn, toggleVidjuRoomOn] = useState(false);
   const worldContainerRef = useRef(undefined);
   const videoRef = useRef(undefined);
 
   useEffect(() => {
     if (phase === 1) {
-      toggleVidjuRoomOn(true);
     }
   }, [phase]);
 
@@ -42,7 +38,6 @@ export default function ThreeWorld() {
     const { x, y, z } = CAMERA_START;
     camera.position.set(x, y, z);
     const controls = new OrbitControls(camera, worldContainerRef.current);
-    // controls.autoRotate = true;
     const renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(1.0, 1.0, 1.0));
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -142,7 +137,6 @@ export default function ThreeWorld() {
         videoRef={videoRef}
         test={test}
       />
-      {(vidjuRoomOn || test) && <VidjuRoom />}
     </div>
   );
 }

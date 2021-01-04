@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import videojs from "video.js";
 const url = "https://ice.raptor.pizza/hls/meiosis.m3u8";
@@ -6,9 +6,11 @@ const MAX_RETRIES = 15;
 export default function ArtistStream({ createScreen, videoRef, test = false }) {
   const [loading, setLoading] = useState(!test);
   const [retryCounter, setRetryCounter] = useState(0);
+  const vjRef = useRef(undefined);
 
   const initStream = useCallback(async () => {
     const video = videoRef.current;
+    var vj;
     if (!test) {
       await fetch(url)
         .then((r) => r)
@@ -18,7 +20,9 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
           }
           setLoading(false);
           const source = url;
-          videojs(video, { width: 500 });
+          vjRef.current = videojs(video, { width: 500 });
+
+          window.videojs = vj;
           if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(source);
@@ -26,6 +30,9 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
           } else {
             video.src = source;
           }
+          video.onloadeddata = () => {
+            vjRef.current.liveTracker.seekToLiveEdge();
+          };
         });
     }
     createScreen(video);
@@ -50,9 +57,20 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
 
   return (
     <div>
-      {/* <button onClick={initStream}>Stream</button>
-      <button onClick={() => videoRef.current.play()}>Play video</button>
-      {loading && <div>loading... {retryCounter}</div>} */}
+      <div
+        style={{
+          position: "absolute",
+          top: 10,
+          left: 100,
+          fontFamily: "monospace",
+          fontWeight: "bold",
+          fontSize: 20,
+          cursor: "pointer",
+        }}
+        onClick={() => vjRef.current.liveTracker.seekToLiveEdge()}
+      >
+        Go To Live
+      </div>
       <video
         id="artist-stream"
         className="video-js"

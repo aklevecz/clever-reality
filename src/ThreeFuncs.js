@@ -3,12 +3,10 @@ import { GUI } from "three/examples/jsm/libs/dat.gui.module.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
 const randomI = (max) => Math.floor(Math.random() * max);
-// function randomIntFromInterval(min, max) {
-//   return Math.floor(Math.random() * (max - min + 1) + min);
-// }
-export function lerp(x, a, b) {
+
+export const lerp = (x, a, b) => {
   return x * (b - a) + a;
-}
+};
 
 const randomColor = () =>
   new THREE.Color(
@@ -78,23 +76,17 @@ export const createLight = () => {
   light.position.set(0, 70, 30);
   light.target.position.set(0, 0, -10);
   light.castShadow = true;
-  //Set up shadow properties for the light
-  light.shadow.mapSize.width = 2048; // default
-  light.shadow.mapSize.height = 2048; // default
-  light.shadow.camera.near = 0.5; // default
-  light.shadow.camera.far = 500; // default
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 500;
   const shadowF = 50;
   light.shadow.camera.left = -shadowF;
   light.shadow.camera.right = shadowF;
   light.shadow.camera.top = shadowF;
   light.shadow.camera.bottom = -shadowF;
-  // const helper = new THREE.DirectionalLightHelper(light, 5);
-  // scene.add(helper);
   scene.add(light);
   scene.add(light.target);
-
-  // const shadowCameraHelper = new THREE.CameraHelper(light.shadow.camera);
-  // scene.add(shadowCameraHelper);
 };
 
 export const createScreen = (video) => {
@@ -138,11 +130,6 @@ export const createOrb = (video = gVideo(), color) => {
     // opacity: 0.7,
   });
   const mesh = new THREE.Mesh(geometry, material);
-  // Use actual math for calculating the particle boundary space
-  // const max = 20;
-  // const x = randomIntFromInterval(-max - 1, max + 1);
-  // const y = randomIntFromInterval(-max, max);
-  // const z = randomIntFromInterval(-30, -5);
 
   const x = Math.random() * 2 * r - (2 * r) / 2;
   const y = Math.random() * r;
@@ -151,7 +138,6 @@ export const createOrb = (video = gVideo(), color) => {
   mesh.rotation.y = Math.PI * 1.5;
 
   if (video) mesh.vId = video.id.replace("remote-video-", "");
-  // mesh.castShadow = true;
   scene.add(mesh);
   orbs.current.push(mesh);
 };
