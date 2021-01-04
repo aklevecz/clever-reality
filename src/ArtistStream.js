@@ -10,7 +10,6 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
 
   const initStream = useCallback(async () => {
     const video = videoRef.current;
-    var vj;
     if (!test) {
       await fetch(url)
         .then((r) => r)
@@ -21,8 +20,6 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
           setLoading(false);
           const source = url;
           vjRef.current = videojs(video, { width: 500 });
-
-          window.videojs = vj;
           if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(source);
