@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import ArtistStream from "./ArtistStream";
+import PressStart from "./PressStart";
 import {
   CAMERA_START,
   createFloor,
@@ -29,6 +30,7 @@ export default function ThreeWorld() {
   }, [phase]);
 
   useEffect(() => {
+    if (worldContainerRef.current === undefined) return;
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -38,6 +40,7 @@ export default function ThreeWorld() {
     const { x, y, z } = CAMERA_START;
     camera.position.set(x, y, z);
     const controls = new OrbitControls(camera, worldContainerRef.current);
+    controls.maxPolarAngle = Math.PI / 2;
     const renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(1.0, 1.0, 1.0));
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -45,7 +48,7 @@ export default function ThreeWorld() {
     renderer.shadowMap.enabled = true;
 
     worldContainerRef.current.appendChild(renderer.domElement);
-    worldContainerRef.current.appendChild(stats.dom);
+    // worldContainerRef.current.appendChild(stats.dom);
     const startButtonObject = startButton();
     createFloor();
     createLight();
@@ -66,7 +69,24 @@ export default function ThreeWorld() {
     document
       .querySelector("canvas")
       .addEventListener("touchstart", checkClick, true);
-    document.body.addEventListener("mousedown", checkClick, true);
+    document.body.addEventListener("click", checkClick, true);
+
+    var analyser;
+    var dataArray;
+    const setupAudioContext = () => {
+      return;
+      alert(navigator.platform);
+      if (navigator.platform === "iPhone" || navigator.platform === "Android")
+        return;
+      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      var source = audioCtx.createMediaElementSource(videoRef.current);
+      source.connect(analyser);
+      source.connect(audioCtx.destination);
+      analyser.fftSize = 512;
+      var bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+    };
 
     var clickAnimationRunning = false;
     function checkClick(e) {
@@ -74,6 +94,8 @@ export default function ThreeWorld() {
       ray.setFromCamera(mouse, camera);
       const intersections = ray.intersectObjects([startButtonObject]);
       if (intersections.length > 0) {
+        controls.autoRotate = true;
+        setupAudioContext();
         videoRef.current.play();
         if (!clickAnimationRunning) {
           clickAnimationRunning = true;
@@ -105,8 +127,15 @@ export default function ThreeWorld() {
     let frame;
     function animate() {
       frame = requestAnimationFrame(animate);
+      if (analyser) {
+        analyser.getByteFrequencyData(dataArray);
+      }
       for (let i = 0; i < orbs.length; i++) {
         orbs[i].rotation.y += 0.01;
+        if (analyser) {
+          const d = dataArray[i % 256] / 100;
+          // orbs[i].scale.set(d, d, d);
+        }
       }
 
       renderer.render(scene, camera);
@@ -118,7 +147,6 @@ export default function ThreeWorld() {
     const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
@@ -132,8 +160,10 @@ export default function ThreeWorld() {
 
   return (
     <div style={{ width: "100%", height: "100%" }} ref={worldContainerRef}>
+      <PressStart phase={phase} />
       <ArtistStream
         createScreen={createScreen}
+        phase={phase}
         videoRef={videoRef}
         test={test}
       />

@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+}
+video,
+#artist-stream {
+  display: none;
+}
+
+@keyframes press-start-anim {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+#press-start {
+  font-family: monospace;
+  font-size: 2rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #fbbdf4;
+  animation: press-start-anim 10s infinite;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+#controls-container {
+  position: absolute;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 16px;
+  user-select: none;
+  left: 10px;
+  top: 10px;
+
+  div {
+    margin: 10px;
+    cursor: pointer;
+  }
+}
+
+#volume {
+  width: 300px;
+  height: 20px;
+
+  canvas {
+    height: 100%;
+    width: 100%;
+  }
+}

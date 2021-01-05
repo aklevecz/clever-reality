@@ -18,7 +18,8 @@ export const CAMERA_START = { x: 0, y: 20, z: 50 };
 
 const orbGeoRef = new THREE.SphereGeometry(1, 30, 30);
 export const scene = new THREE.Scene();
-var gui = new GUI();
+var gui = undefined;
+// gui = new GUI();
 export const stats = new Stats();
 export const ray = new THREE.Raycaster();
 export const mouse = new THREE.Vector2(9999, 9999);
@@ -35,24 +36,25 @@ export const startButton = () => {
   const { x, y, z } = CAMERA_START;
   const buttonState = {
     x,
-    y: y - 1.4,
+    y: y - 2,
     z: z - 5,
     widthSegments: 1,
     heightSegments: 1,
   };
   mesh.position.set(buttonState.x, buttonState.y, buttonState.z);
   scene.add(mesh);
-  const folder = gui.addFolder("Start Button");
-  folder
-    .add(buttonState, "x", -20, 20, 0.1)
-    .onChange((e) => (mesh.position.x = e));
-  folder
-    .add(buttonState, "y", -20, 20, 0.1)
-    .onChange((e) => (mesh.position.y = e));
-  folder
-    .add(buttonState, "z", buttonState.z - 20, buttonState.z + 20, 0.1)
-    .onChange((e) => (mesh.position.z = e));
-
+  if (gui) {
+    const folder = gui.addFolder("Start Button");
+    folder
+      .add(buttonState, "x", -20, 20, 0.1)
+      .onChange((e) => (mesh.position.x = e));
+    folder
+      .add(buttonState, "y", -20, 20, 0.1)
+      .onChange((e) => (mesh.position.y = e));
+    folder
+      .add(buttonState, "z", buttonState.z - 20, buttonState.z + 20, 0.1)
+      .onChange((e) => (mesh.position.z = e));
+  }
   return mesh;
 };
 
@@ -118,28 +120,31 @@ export const createScreen = (video) => {
   scene.add(backMesh);
 };
 
-const r = 30;
-export const createOrb = (video = gVideo(), color) => {
-  const rColor = randomColor();
-  const geometry = orbGeoRef;
-  // const texture = new THREE.VideoTexture(video);
-  const material = new THREE.MeshPhysicalMaterial({
-    // map: texture,
-    color: color ? color : rColor,
-    // transparent: true,
-    // opacity: 0.7,
-  });
-  const mesh = new THREE.Mesh(geometry, material);
+const r = 100;
+export const createOrb = ({ video = gVideo(), color }) => {
+  for (var i = 0; i < 100; i++) {
+    const rColor = randomColor();
+    const geometry = orbGeoRef;
+    // const texture = new THREE.VideoTexture(video);
+    const material = new THREE.MeshPhysicalMaterial({
+      // map: texture,
+      color: color ? color : rColor,
+      // transparent: true,
+      // opacity: 0.7,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
 
-  const x = Math.random() * 2 * r - (2 * r) / 2;
-  const y = Math.random() * r;
-  const z = Math.random() * r * 3;
-  mesh.position.set(x, y, z);
-  mesh.rotation.y = Math.PI * 1.5;
-
-  if (video) mesh.vId = video.id.replace("remote-video-", "");
-  scene.add(mesh);
-  orbs.current.push(mesh);
+    const x = Math.random() * 2 * r - (2 * r) / 2;
+    const y = Math.random() * r;
+    const z = Math.random() * 2 * r - (2 * r) / 2;
+    // const z = Math.random() * r * 3;
+    mesh.position.set(x, y, z);
+    mesh.rotation.y = Math.PI * 1.5;
+    mesh.castShadow = true;
+    if (video) mesh.vId = video.id.replace("remote-video-", "");
+    scene.add(mesh);
+    orbs.push(mesh);
+  }
 };
 
 export const removeOrb = (event) => {

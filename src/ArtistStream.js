@@ -1,39 +1,39 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Hls from "hls.js";
-import videojs from "video.js";
+import fire from "./fire.mp4";
+import StreamControls from "./StreamControls";
 const url = "https://ice.raptor.pizza/hls/meiosis.m3u8";
 const MAX_RETRIES = 15;
-export default function ArtistStream({ createScreen, videoRef, test = false }) {
+export default function ArtistStream({
+  createScreen,
+  phase,
+  videoRef,
+  test = false,
+}) {
   const [loading, setLoading] = useState(!test);
   const [retryCounter, setRetryCounter] = useState(0);
-  const vjRef = useRef(undefined);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   const initStream = useCallback(async () => {
     const video = videoRef.current;
-    if (!test) {
-      await fetch(url)
-        .then((r) => r)
-        .then((d) => {
-          if (d.status === 404) {
-            return false;
-          }
-          setLoading(false);
-          const source = url;
-          vjRef.current = videojs(video, { width: 500 });
-          if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(source);
-            hls.attachMedia(video);
-          } else {
-            video.src = source;
-          }
-          video.onloadeddata = () => {
-            vjRef.current.liveTracker.seekToLiveEdge();
-          };
-        });
-    }
-    createScreen(video);
-  }, [createScreen, videoRef, test]);
+    await fetch(url)
+      .then((r) => r)
+      .then((d) => {
+        if (d.status === 404) {
+          return false;
+        }
+        setLoading(false);
+        const source = url;
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(source);
+          hls.attachMedia(video);
+        } else {
+          video.src = source;
+        }
+      });
+  }, [videoRef]);
 
   useEffect(() => {
     initStream();
@@ -52,22 +52,27 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
     setTimeout(incrementCounter, 1000);
   }, [initStream, incrementCounter, retryCounter, loading]);
 
+  useEffect(() => {
+    videoRef.current.src = fire;
+    createScreen(videoRef.current);
+    videoRef.current.onplay = () => setIsPlaying(true);
+    videoRef.current.onpause = () => setIsPlaying(false);
+    //  eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (isMuted) {
+      video.muted = true;
+    } else {
+      video.muted = false;
+    }
+  }, [isMuted, videoRef]);
+
+  const toggleMute = () => setIsMuted(!isMuted);
+
   return (
     <div>
-      <div
-        style={{
-          position: "absolute",
-          top: 10,
-          left: 100,
-          fontFamily: "monospace",
-          fontWeight: "bold",
-          fontSize: 20,
-          cursor: "pointer",
-        }}
-        onClick={() => vjRef.current.liveTracker.seekToLiveEdge()}
-      >
-        Go To Live
-      </div>
       <video
         id="artist-stream"
         className="video-js"
@@ -76,10 +81,17 @@ export default function ArtistStream({ createScreen, videoRef, test = false }) {
         playsInline
         autoPlay
         loop
-        width="500"
         controls
-        src={test ? require("./test_static/video.mp4").default : ""}
+        muted
       />
+      {phase > 0 && (
+        <StreamControls
+          videoRef={videoRef}
+          isPlaying={isPlaying}
+          isMuted={isMuted}
+          toggleMute={toggleMute}
+        />
+      )}
     </div>
   );
 }
