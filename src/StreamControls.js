@@ -32,18 +32,10 @@ export default function StreamControls({
 
   return (
     <div id="controls-container">
-      <div onClick={goToLive} onTouchStart={goToLive}>
-        Go To Live
-      </div>
-      <div onTouchStart={togglePlay} onClick={togglePlay}>
-        {isPlaying ? "Pause" : "Play"}
-      </div>
-      <div onTouchStart={toggleMute} onClick={toggleMute}>
-        {isMuted ? "Unmute" : "Mute"}
-      </div>
-      <div onClick={createOrb} onTouchStart={createOrb}>
-        Orb
-      </div>
+      <div onClick={goToLive}>Go To Live</div>
+      <div onClick={togglePlay}>{isPlaying ? "Pause" : "Play"}</div>
+      <div onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</div>
+      <div onClick={createOrb}>Orb</div>
       {navigator.platform !== "iPhone" && (
         <Volume changeVolume={changeVolume} />
       )}

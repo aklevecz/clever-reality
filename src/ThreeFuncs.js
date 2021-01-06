@@ -24,6 +24,7 @@ export const stats = new Stats();
 export const ray = new THREE.Raycaster();
 export const mouse = new THREE.Vector2(9999, 9999);
 export var orbs = [];
+export var collisionObjects = [];
 
 export const startButton = () => {
   const geometry = new THREE.SphereGeometry(1, 20, 20);
@@ -117,12 +118,13 @@ export const createScreen = (video) => {
   const backMesh = new THREE.Mesh(backGeo, backMaterial);
   backMesh.castShadow = true;
   backMesh.position.z = -11.1;
+  collisionObjects.push(backMesh);
   scene.add(backMesh);
 };
 
 const r = 100;
-export const createOrb = ({ video = gVideo(), color }) => {
-  for (var i = 0; i < 100; i++) {
+export const createOrb = ({ video = gVideo(), color, n = 1 }) => {
+  for (var i = 0; i < n; i++) {
     const rColor = randomColor();
     const geometry = orbGeoRef;
     // const texture = new THREE.VideoTexture(video);

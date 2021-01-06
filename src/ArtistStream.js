@@ -69,7 +69,10 @@ export default function ArtistStream({
     }
   }, [isMuted, videoRef]);
 
-  const toggleMute = () => setIsMuted(!isMuted);
+  const toggleMute = (e) => {
+    console.log(e);
+    setIsMuted(!isMuted);
+  };
 
   return (
     <div>
@@ -84,14 +87,14 @@ export default function ArtistStream({
         controls
         muted
       />
-      {phase > 0 && (
-        <StreamControls
-          videoRef={videoRef}
-          isPlaying={isPlaying}
-          isMuted={isMuted}
-          toggleMute={toggleMute}
-        />
-      )}
+      {/* {phase > 0 && ( */}
+      <StreamControls
+        videoRef={videoRef}
+        isPlaying={isPlaying}
+        isMuted={isMuted}
+        toggleMute={toggleMute}
+      />
+      {/* )} */}
     </div>
   );
 }

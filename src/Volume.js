@@ -6,7 +6,7 @@ export default function Volume({ changeVolume }) {
     const ctx = canvas.getContext("2d");
     const { width: w, height: h } = canvas;
     ctx.rect(0, 0, w, h);
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "#00ffb1";
     ctx.fill();
 
     let up = true;
