@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/clever-reality/static/css/main.1e2a84ae.chunk.css",
-    "main.js": "/clever-reality/static/js/main.f8a60fa5.chunk.js",
-    "main.js.map": "/clever-reality/static/js/main.f8a60fa5.chunk.js.map",
+    "main.css": "/clever-reality/static/css/main.58dae677.chunk.css",
+    "main.js": "/clever-reality/static/js/main.a90d0066.chunk.js",
+    "main.js.map": "/clever-reality/static/js/main.a90d0066.chunk.js.map",
     "runtime-main.js": "/clever-reality/static/js/runtime-main.a938bee2.js",
     "runtime-main.js.map": "/clever-reality/static/js/runtime-main.a938bee2.js.map",
-    "static/js/2.3eccd73d.chunk.js": "/clever-reality/static/js/2.3eccd73d.chunk.js",
-    "static/js/2.3eccd73d.chunk.js.map": "/clever-reality/static/js/2.3eccd73d.chunk.js.map",
+    "static/js/2.7fe7927f.chunk.js": "/clever-reality/static/js/2.7fe7927f.chunk.js",
+    "static/js/2.7fe7927f.chunk.js.map": "/clever-reality/static/js/2.7fe7927f.chunk.js.map",
     "index.html": "/clever-reality/index.html",
-    "static/css/main.1e2a84ae.chunk.css.map": "/clever-reality/static/css/main.1e2a84ae.chunk.css.map",
-    "static/js/2.3eccd73d.chunk.js.LICENSE.txt": "/clever-reality/static/js/2.3eccd73d.chunk.js.LICENSE.txt",
+    "static/css/main.58dae677.chunk.css.map": "/clever-reality/static/css/main.58dae677.chunk.css.map",
+    "static/js/2.7fe7927f.chunk.js.LICENSE.txt": "/clever-reality/static/js/2.7fe7927f.chunk.js.LICENSE.txt",
     "static/media/fire.5b252a8b.mp4": "/clever-reality/static/media/fire.5b252a8b.mp4"
   },
   "entrypoints": [
     "static/js/runtime-main.a938bee2.js",
-    "static/js/2.3eccd73d.chunk.js",
-    "static/css/main.1e2a84ae.chunk.css",
-    "static/js/main.f8a60fa5.chunk.js"
+    "static/js/2.7fe7927f.chunk.js",
+    "static/css/main.58dae677.chunk.css",
+    "static/js/main.a90d0066.chunk.js"
   ]
 }
