@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/clever-reality/static/css/main.00774bc7.chunk.css",
-    "main.js": "/clever-reality/static/js/main.0b5a7cd9.chunk.js",
-    "main.js.map": "/clever-reality/static/js/main.0b5a7cd9.chunk.js.map",
+    "main.js": "/clever-reality/static/js/main.ad1c7ea2.chunk.js",
+    "main.js.map": "/clever-reality/static/js/main.ad1c7ea2.chunk.js.map",
     "runtime-main.js": "/clever-reality/static/js/runtime-main.a938bee2.js",
     "runtime-main.js.map": "/clever-reality/static/js/runtime-main.a938bee2.js.map",
     "static/js/2.3e2c1935.chunk.js": "/clever-reality/static/js/2.3e2c1935.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.a938bee2.js",
     "static/js/2.3e2c1935.chunk.js",
     "static/css/main.00774bc7.chunk.css",
-    "static/js/main.0b5a7cd9.chunk.js"
+    "static/js/main.ad1c7ea2.chunk.js"
   ]
 }
